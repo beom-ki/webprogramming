@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "type": "Nothing"
+  },
+  {
+    "id": 2,
+    "type": "battle"
+  },
+  {
+    "id": 3,
+    "type": "item"
+  },
+  {
+    "id": 4,
+    "type": "recovery",
+    "HP": 1
+  },
+  {
+    "id": 5,
+    "type": "random",
+    "detail": [
+      {
+      "type": "mad",
+      "str": 3,
+      "def": -1
+    },
+      {
+        "type": "strong",
+        "str": 1
+      },
+      {
+        "type": "teleport"
+      }]
+  }
+
+
+]
