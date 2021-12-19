@@ -8,12 +8,14 @@ const schema = new Schema({
   level: Number,
   exp: Number,
 
-  maxHP: { type: Number, default: 10 },
-  HP: { type: Number, default: 10 },
-  str: { type: Number, default: 5 },
-  def: { type: Number, default: 5 },
+  maxHP: { type: Number, default: 50 },
+  HP: { type: Number, default: 50 },
+  str: { type: Number, default: 10 },
+  def: { type: Number, default: 10 },
   x: { type: Number, default: 0 },
-  y: { type: Number, default: 0 }
+  y: { type: Number, default: 0 },
+
+  item: [{ type: Schema.Types.ObjectId, ref: "Item" }]
 });
 schema.methods.incrementHP = function (val) {
   const hp = this.HP + val;

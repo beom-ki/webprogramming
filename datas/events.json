@@ -1,24 +1,29 @@
 [
   {
     "id": 1,
-    "type": "Nothing"
+    "type": "Nothing",
+    "prob": 0.1
   },
   {
     "id": 2,
-    "type": "battle"
+    "type": "battle",
+    "prob": 0.4
   },
   {
     "id": 3,
-    "type": "item"
+    "type": "item",
+    "prob": 0.2
   },
   {
     "id": 4,
     "type": "recovery",
-    "HP": 1
+    "HP": 1,
+    "prob": 0.2
   },
   {
     "id": 5,
     "type": "random",
+    "prob": 0.1,
     "detail": [
       {
       "type": "mad",
@@ -33,6 +38,5 @@
         "type": "teleport"
       }]
   }
-
 
 ]
