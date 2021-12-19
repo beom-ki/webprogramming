@@ -21,7 +21,6 @@ class MapManager extends Manager {
       this.fields[`${field[0]}_${field[1]}`] = {
         x: field[0],
         y: field[1],
-        description: field[2],
         canGo: field[3],
         events: JSON.parse(fs.readFileSync(__dirname + "/events.json"))
       };

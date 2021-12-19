@@ -17,7 +17,7 @@
 <div id="items">
     현재 내 아이템 : <span id="inventory"> [] </span>
 </div><br>
-<div id="game"></div>
+<div id="game"></div><br>
 <div id="event_result"></div>
 <div id ="monster"></div><br>
 <div id ="battle">
@@ -49,8 +49,8 @@
             data: $.param(params),
         }).done((req) => {
             const { player, field, event, actions, itemId_count } = req;
-
-            $('#game').text(field.description);
+            let field_description = field.events.filter(e => e.type === event.type).map(e=>e.description)
+            $('#game').text(field_description[0]);
             $('#position').text(`(${field.x},${field.y})`);
             $('#LV').text(player.level);
             $('#EXP').text(player.exp);

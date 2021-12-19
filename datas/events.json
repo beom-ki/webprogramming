@@ -7,23 +7,27 @@
   {
     "id": 2,
     "type": "battle",
-    "prob": 0.4
+    "prob": 0.4,
+    "description": "불안한 기분이 들어온다.. 코로나 감염을 완수하기 위해서는 몬스터를 물리쳐야 한다.."
   },
   {
     "id": 3,
     "type": "item",
-    "prob": 0.2
+    "prob": 0.2,
+    "description": "나를 더 강하게 만들어줄 아이템을 얻어냈다. 이 아이템과 함께라면 온몸 구석구석을 휘젖고 다닐 수 있겠어!"
   },
   {
     "id": 4,
     "type": "recovery",
     "HP": 1,
-    "prob": 0.2
+    "prob": 0.2,
+    "description": "몸속 모험에 지쳐있었는데 가뭄이 단비같은 포션이다.."
   },
   {
     "id": 5,
     "type": "random",
     "prob": 0.1,
+    "description": "뭐지... 익숙치 않은 기분이다. 뭔가 이상한 일이 일어날 것 같다..",
     "detail": [
       {
       "type": "mad",

@@ -52,10 +52,10 @@ app.post("/signup", async (req, res) => {
 
   const player = new Player({
     name,
-    maxHP: 10,
-    HP: 10,
-    str: 5,
-    def: 5,
+    maxHP: 50,
+    HP: 50,
+    str: 10,
+    def: 10,
     x: 0,
     y: 0
   });
@@ -121,7 +121,12 @@ app.post("/action", authentication, async (req, res) => {
 
     if (_event.type === "battle") {
       const monsters = JSON.parse(fs.readFileSync("./datas/monsters.json"));
-      const _monster = monsters[Math.floor(Math.random() * monsters.length)]; //몬스터들도 랜덤 출현
+      const monster_prob = monsters
+          .map((e, i) => Array(e.prob * 10).fill(i))
+          .reduce((c, v) => c.concat(v), []);
+      const monster_index =
+          monster_prob[Math.floor(Math.random() * monster_prob.length)];
+      const _monster = monsters[monster_index]; //몬스터들도 랜덤 출현
       event = {
         description: `${_monster.name}와 마주쳐 싸움을 벌였다.`,
         type: "battle",
@@ -144,12 +149,18 @@ app.post("/action", authentication, async (req, res) => {
         player.maxHP += 5;
       }
     } else if (_event.type === "recovery") {
-      event = { description: "포션을 획득해 체력을 회복했다." };
+      event = {
+        description: "포션을 획득해 체력을 회복했다.",
+        type: "recovery"
+      };
       player.incrementHP(1);
     } else if (_event.type === "item") {
       const items = JSON.parse(fs.readFileSync("./datas/items.json"));
       const _item = items[Math.floor(Math.random() * items.length)];
-      event = { description: `${_item.name} 아이템을 획득했다.` };
+      event = {
+        description: `${_item.name} 아이템을 획득했다.`,
+        type: "item"
+      };
 
       const item = new Item({
         itemId: _item.id,
@@ -161,8 +172,10 @@ app.post("/action", authentication, async (req, res) => {
       const random_events = events[4].detail;
       const _random =
           random_events[Math.floor(Math.random() * random_events.length)];
-      event = { description: `랜덤 이벤트 : ${_random.type} 발생!` };
-      // TODO : 랜덤이벤트 능력치 구현
+      event = {
+        description: `랜덤 이벤트 : ${_random.type} 발생!`,
+        type: "random"
+      }; // TODO : 랜덤이벤트 능력치 구현
     }
 
 
