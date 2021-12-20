@@ -21,7 +21,7 @@ app.engine("html", require("ejs").renderFile);
 mongoose.connect(
   "mongodb+srv://final:final@final.d2h19.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true }
-); // port 바꿔줘야 돌아갔다. - 내 로컬 문제인가
+);
 
 const authentication = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -57,7 +57,8 @@ app.post("/signup", async (req, res) => {
     str: 10,
     def: 10,
     x: 0,
-    y: 0
+    y: 0,
+    randomStat: 5
   });
 
   const key = crypto.randomBytes(24).toString("hex");
@@ -66,6 +67,35 @@ app.post("/signup", async (req, res) => {
   await player.save();
 
   return res.send({ key });
+});
+
+app.get("/randomStat", (req,res)=>{
+  res.render("randomStat");
+})
+
+app.post("/confirm_stat", authentication, async(req, res)=>{
+  const {choice} = req.body;
+  const player = req.player;
+
+  const getRandomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.ceil(max);
+    return Math.floor(Math.random()*(max-min)) + min;
+  }
+
+  if (choice==="retry" && player.randomStat > 0) {
+    player.maxHP = getRandomInt(10,100);
+    player.HP = player.maxHP;
+    player.str = getRandomInt(5,30);
+    player.def = getRandomInt(5,30);
+    player.randomStat -= 1;
+
+    await player.save();
+  } else if (choice==="retry" && player.randomStat === 0){
+    console.log('기회를 모두 소진하였습니다.')
+  }
+
+  return res.send({player});
 });
 
 app.post("/action", authentication, async (req, res) => {
@@ -176,6 +206,11 @@ app.post("/action", authentication, async (req, res) => {
         description: `랜덤 이벤트 : ${_random.type} 발생!`,
         type: "random"
       }; // TODO : 랜덤이벤트 능력치 구현
+    } else {
+      event = {
+        description: '아무일도 일어나지 않았다.',
+        type: "nothing"
+      };
     }
 
 
@@ -203,4 +238,4 @@ app.post("/action", authentication, async (req, res) => {
   }
 });
 
-app.listen(3010);
+app.listen(3000);

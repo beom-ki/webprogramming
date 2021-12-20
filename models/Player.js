@@ -14,6 +14,7 @@ const schema = new Schema({
   def: { type: Number, default: 10 },
   x: { type: Number, default: 0 },
   y: { type: Number, default: 0 },
+  randomStat: { type: Number, default: 5 },
 
   item: [{ type: Schema.Types.ObjectId, ref: "Item" }]
 });

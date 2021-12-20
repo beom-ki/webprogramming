@@ -17,7 +17,7 @@
 
     const key = localStorage.getItem('_key');
     if (key) {
-      location.href = '/game';
+      location.href = '/randomStat';
     }
      $('#form').submit(function(e) {
        e.preventDefault();
@@ -25,7 +25,7 @@
        $.post(action, $(this).serialize(),(res) => {
          if(res.key) {
           localStorage.setItem('_key', res.key);
-          location.href = '/game';
+          location.href = '/randomStat';
          }
          else {
           alert("에러가 발생했습니다. 다시 시도해주세요.");

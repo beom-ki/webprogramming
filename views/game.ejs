@@ -29,13 +29,14 @@
 <div id="battle_control">
     <button id="runaway" value="runaway">도망가기</button>
     <button id="nextTurn" value="nextTurn">다음 턴 전투 진행</button>
-</div>
+</div><br>
 <div id="control">
     <button value="1">동</button>
     <button value="3">서</button>
     <button value="2">남</button>
     <button value="0">북</button>
-</div>
+</div><br>
+<button id="newPlayer" value="newPlayer" onclick = "location.href =  '/';">새 플레이어로 게임하기</button>
 
 <script>
 
@@ -71,36 +72,29 @@
                 $('#control').append(dom);
             })
 
-            if (event) {
-                $('#event_result').text(event.description);
 
-                if (event.type === "battle"){
-                    $('#monster').text(`이름 : ${event.monster.name}, str : ${event.monster.str}, def : ${event.monster.def}, HP : ${event.monster.hp}`);
-                    $('#battle_comment').text('전투가 벌어졌다.');
-                    let i = 1;
-                    $('#battle_turn').text(`${i}턴!`);
+            $('#event_result').text(event.description);
 
-                    let my_attack = player.str - event.monster.def;
-                    let monster_attack = event.monster.str - player.def;
+            if (event.type === "battle"){
+                $('#monster').text(`이름 : ${event.monster.name}, str : ${event.monster.str}, def : ${event.monster.def}, HP : ${event.monster.hp}`);
+                $('#battle_comment').text('전투가 벌어졌다.');
+                let i = 1;
+                $('#battle_turn').text(`${i}턴!`);
 
-                    $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터의 현재 체력은 ${event.monster.hp - my_attack}`);
-                    $('#monster_battle').text(`${event.monster.name}는 나에게 ${monster_attack}의 피해를 입혔다. 나의 현재 체력은 ${player.HP - monster_attack}`);
+                let my_attack = player.str - event.monster.def;
+                let monster_attack = event.monster.str - player.def;
 
-                } else {
-                    $('#monster').text('');
-                    $('#battle_comment').text('');
-                    $('#battle_turn').text('');
-                    $('#my_battle').text('');
-                    $('#monster_battle').text('');
-                }
+                $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터의 현재 체력은 ${event.monster.hp - my_attack}`);
+                $('#monster_battle').text(`${event.monster.name}는 나에게 ${monster_attack}의 피해를 입혔다. 나의 현재 체력은 ${player.HP - monster_attack}`);
+
             } else {
-                $('#event_result').text("아무일도 일어나지 않았다.");
                 $('#monster').text('');
                 $('#battle_comment').text('');
                 $('#battle_turn').text('');
                 $('#my_battle').text('');
                 $('#monster_battle').text('');
-            }
+            };
+
 
             $('#HP').text(`${player.HP} / ${player.maxHP}`)
         });
@@ -110,7 +104,7 @@
     if (!key) {
         location.href = "/";
     }
-
+    localStorage.clear(); // 새로고침했을 때 초기화면으로 돌아오는 방법
     sendAction("/action", {action: 'query'});
 
 

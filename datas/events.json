@@ -1,8 +1,9 @@
 [
   {
     "id": 1,
-    "type": "Nothing",
-    "prob": 0.1
+    "type": "nothing",
+    "prob": 0.1,
+    "description": "오랜만에 찾아온 평화인 것 같다.. 앞으로도 이렇게 무사히 넘어가야 할텐데.."
   },
   {
     "id": 2,
