@@ -139,7 +139,57 @@ if (events.length > 0) {
         }
     }
 }
-if(player.exp >= 100){ // 경험치 100마다 레벨업
-    player.exp -= 100;
-    player.level += 1;
+
+// 모든 행동 끝난 후 levelcheck 넣어 레벨업과 레벨에 따른 상태 보여줌
+const levelCheck = (exp, level) => {
+    if(exp > 100){
+        exp -= 100;
+        level +=1;
+    }
+    // event.description = '레벨업!'
+    if(level === 2){
+        event = {
+            description: '알파변이로 진화'
+
+        }
+    }
+    else if(level ===3){
+        event = {
+            description: '베타변이로 진화'
+        }
+    }
+    else if(level ===4){
+        event = {
+            description: "감마변이로 진화"
+        }
+    }
+    // event.descripton이 아닌 level.description으로 해서 지속적으로 보여주는 방법도 있을듯
+}
+
+//rand event에 따른 상태 업데이트
+const eventUpdate = (player, randEvent) =>{
+    if (randEvent.str){
+        player.str += randEvent.str;
+    } else if(randEvent.def){
+        player.def += randEvent.def;
+    } else if(randEvent.maxHP){
+        player.maxHP += randEvent.maxHP;
+    } else if(randEvent.HP){
+        player.HP += randEvent.HP
+    }
+    return player
+}
+
+// item획득 후 상태 업데이트
+const itemUpdate = (player, item) =>{
+    if (item.str){
+        player.str += item.str;
+    } else if(item.def){
+        player.def += item.def;
+    } else if(item.maxHP){
+        player.maxHP += item.maxHP;
+    } else if(item.HP){
+        player.HP += item.HP
+    }
+    return player
 }
