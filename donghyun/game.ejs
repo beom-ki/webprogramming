@@ -11,7 +11,7 @@
 
 <div id="status">
     내 HP: <span id="HP"> 50 / 50</span>
-    내 Level: <span id="LV"> 1 </span> <span id = "EXP"> 0/100 </span><br>
+    내 Level: <span id="LV"> 1 </span> EXP: <span id = "EXP"> 0/100 </span><br>
     내 능력치: <span id="STR"> 0 </span> <span id="DEF"> 0 </span>
 </div>
 <div id="items">
@@ -142,9 +142,10 @@
                     // 몬스터 사망
                     if (event.monster.hp - i * my_attack <= 0) {
                         $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터를 물리쳤다!`);
-                        $('#monster_battle').text(`승리했다!`);
+                        $('#monster_battle').text(`승리했다! 경험치 ${event.monster.exp}를 획득했다`);
                         $('#runaway_comment').text('');
-                        sendAction("/action", {damage: monster_attack, dead: "monster", action: "battle", exp:event.monster.exp});
+                        $('#EXP').text(player.exp + event.monster.exp);
+                        sendAction("/action", {damage: 0, dead: "monster", exp: event.monster.exp, action: "battle"});
                         showMoveButton(req, $('#control'))
 
                     }
@@ -154,7 +155,7 @@
                         $('#monster_battle').text(`${event.monster.name}는 나에게 ${monster_attack}의 피해를 입혔다. 나는 체력이 소진되어 사망했다.`);
                         $('#runaway_comment').text('');
                         $('#HP').text(`0 / ${player.maxHP}`)
-                        sendAction("/action", {damage: monster_attack, dead: true, action: "battle", exp:event.monster.exp});
+                        sendAction("/action", {damage: monster_attack, dead: true, exp: 0, action: "battle"});
                         $('#control').html('');
                         showOriginMoveButton($('#dead'));
                         showNewPlayerButton($('#newPlayer'));
@@ -168,7 +169,7 @@
                         $('#runaway_comment').text('');
                         $('#HP').text(`${player.HP - i * monster_attack} / ${player.maxHP}`)
                         $('#control').html('');
-                        sendAction("/action", {damage: monster_attack, dead: false, action: "battle", exp:event.monster.exp });
+                        sendAction("/action", {damage: monster_attack, dead: false, exp: 0, action: "battle"});
 
                         // 10턴 이후
                         if (i >= 10) {
