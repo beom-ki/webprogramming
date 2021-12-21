@@ -52,6 +52,8 @@ app.post("/signup", async (req, res) => {
 
   const player = new Player({
     name,
+    level: 1,
+    exp: 0,
     maxHP: 50,
     HP: 50,
     str: 10,
