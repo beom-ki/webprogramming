@@ -168,8 +168,7 @@ app.post("/action", authentication, async (req, res) => {
         description: `${_monster.name}와 마주쳐 싸움을 벌였다.`,
         type: "battle",
         monster: _monster
-      }; // monster 능력치 보이게 해야한다.
-      // player.incrementHP(-1);
+      };
 
       if (player.HP <= 0) {
         player.x = 0;

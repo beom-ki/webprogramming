@@ -35,10 +35,15 @@
     <button value="3">서</button>
     <button value="2">남</button>
     <button value="0">북</button>
+
 </div>
-<div id="dead">
-    <button id="moveOrigin" value="moveOrigin">원점으로 이동</button>
-</div>
+<div id="tmp"></div>
+=======
+</div><br>
+<div id="dead"></div>
+<div id="newPlayer"></div>
+
+
 
 <script>
     // 동서남북 이동 버튼 보이게 하기
@@ -48,6 +53,8 @@
             const dom = $('<button></button>');
             dom.text(action.text);      // 동서남북 숫자로 보임
             dom.bind('click', function () {
+                location.reload();
+                window.stop();
                 sendAction(action.url, action.params);
             });
 
@@ -61,6 +68,17 @@
         dom.text("원점으로 가기");
         dom.bind('click', function () {
             sendAction("/action", {origin: true, action: "move"});
+        });
+
+        button.append(dom);
+    }
+
+    const showNewPlayerButton = (button) => {
+        const dom = $('<button></button>');
+        dom.text("새 플레이어로 게임하기");
+        dom.bind('click', function () {
+            localStorage.clear();
+            location.href =  '/';
         });
 
         button.append(dom);
@@ -91,99 +109,86 @@
             $('#control').html('');
             $('#battle_control').html('');
             $('#dead').html('');
+            $('#newPlayer').html('')
 
-            if (event) {
-                $('#event_result').text(event.description);
 
-                if (event.type === "battle"){
+            $('#event_result').text(event.description);
+
+            if (event.type === "battle"){
+                $('#monster').text(`이름 : ${event.monster.name}, str : ${event.monster.str}, def : ${event.monster.def}, HP : ${event.monster.hp}`);
+                $('#battle_comment').text('전투가 벌어졌다.');
+
+                let i = 0;
+                $('#battle_turn').text(`${i}턴!`);
+                $('#my_battle').text(`${event.monster.name}를 먼저 공격하자!`);
+                $('#monster_battle').text(``);
+                $('#runaway_comment').text('');
+
+
+                const dom = $('<button></button>');
+                dom.text("다음 공격 턴 진행");
+                dom.bind('click', function () {
+
+                    i = i + 1;
+
                     $('#monster').text(`이름 : ${event.monster.name}, str : ${event.monster.str}, def : ${event.monster.def}, HP : ${event.monster.hp}`);
                     $('#battle_comment').text('전투가 벌어졌다.');
 
-                    let i = 0;
                     $('#battle_turn').text(`${i}턴!`);
-                    $('#my_battle').text(`${event.monster.name}를 먼저 공격하자!`);
-                    $('#monster_battle').text(``);
-                    $('#runaway_comment').text('');
 
+                    let my_attack = Math.max(0, player.str - event.monster.def);
+                    let monster_attack = Math.max(0, event.monster.str - player.def);
 
-                    const dom = $('<button></button>');
-                    dom.text("다음 공격 턴 진행");
-                    dom.bind('click', function () {
+                    // 몬스터 사망
+                    if (event.monster.hp - i * my_attack <= 0) {
+                        $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터를 물리쳤다!`);
+                        $('#monster_battle').text(`승리했다!`);
+                        $('#runaway_comment').text('');
+                        showMoveButton(req, $('#control'))
 
-                        i = i + 1;
+                    }
+                    // 나 사망
+                    else if (player.HP - i * monster_attack <= 0) {
+                        $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터의 현재 체력은 ${event.monster.hp - i * my_attack}`);
+                        $('#monster_battle').text(`${event.monster.name}는 나에게 ${monster_attack}의 피해를 입혔다. 나는 체력이 소진되어 사망했다.`);
+                        $('#runaway_comment').text('');
+                        $('#HP').text(`0 / ${player.maxHP}`)
+                        sendAction("/action", {damage: monster_attack, dead: true, action: "battle"});
+                        $('#control').html('');
+                        showOriginMoveButton($('#dead'));
+                        showNewPlayerButton($('#newPlayer'));
 
-                        $('#monster').text(`이름 : ${event.monster.name}, str : ${event.monster.str}, def : ${event.monster.def}, HP : ${event.monster.hp}`);
-                        $('#battle_comment').text('전투가 벌어졌다.');
+                    }
+                    // 전투 진행 중
+                    else {
 
-                        $('#battle_turn').text(`${i}턴!`);
+                        $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터의 현재 체력은 ${event.monster.hp - i * my_attack}`);
+                        $('#monster_battle').text(`${event.monster.name}는 나에게 ${monster_attack}의 피해를 입혔다. 나의 현재 체력은 ${player.HP - i * monster_attack}`);
+                        $('#runaway_comment').text('');
+                        $('#HP').text(`${player.HP - i * monster_attack} / ${player.maxHP}`)
+                        $('#control').html('');
+                        sendAction("/action", {damage: monster_attack, dead: false, action: "battle"});
 
-                        let my_attack = Math.max(0, player.str - event.monster.def);
-                        let monster_attack = Math.max(0, event.monster.str - player.def);
-
-                        // 몬스터 사망
-                        if (event.monster.hp - i * my_attack <= 0) {
-                            $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터를 물리쳤다!`);
-                            $('#monster_battle').text(`승리했다!`);
-                            $('#runaway_comment').text('');
-                            showMoveButton(req, $('#control'))
-                            battleEnd = true;
+                        // 10턴 이후
+                        if (i >= 10) {
+                            $('#runaway_comment').text('10턴이 지나서 도망칠 기회가 주어졌다.');
+                            showMoveButton(req, $('#control'));
 
                         }
-                        // 나 사망
-                        else if (player.HP - i * monster_attack <= 0) {
-                            $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터의 현재 체력은 ${event.monster.hp - i * my_attack}`);
-                            $('#monster_battle').text(`${event.monster.name}는 나에게 ${monster_attack}의 피해를 입혔다. 나는 체력이 소진되어 사망했다.`);
-                            $('#runaway_comment').text('');
-                            $('#HP').text(`0 / ${player.maxHP}`)
-                            sendAction("/action", {damage: monster_attack, dead: true, action: "battle"});
-                            $('#control').html('');
-                            showOriginMoveButton($('#dead'))
-                            battleEnd = true;
+                        // 체력 20% 이하
+                        if (player.HP * 0.8 <= i * monster_attack) {
+                            $('#runaway_comment').text('체력이 20% 이하로 떨어져서 도망칠 기회가 주어졌다.');
+                            showMoveButton(req, $('#control'));
 
                         }
-                        // 전투 진행 중
-                        else {
-                            $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터의 현재 체력은 ${event.monster.hp - i * my_attack}`);
-                            $('#monster_battle').text(`${event.monster.name}는 나에게 ${monster_attack}의 피해를 입혔다. 나의 현재 체력은 ${player.HP - i * monster_attack}`);
-                            $('#runaway_comment').text('');
-                            $('#HP').text(`${player.HP - i * monster_attack} / ${player.maxHP}`)
-                            $('#control').html('');
-                            sendAction("/action", {damage: monster_attack, dead: false, action: "battle"});
+                    }
 
-                            // 10턴 이후
-                            if (i >= 10) {
-                                $('#runaway_comment').text('10턴이 지나서 도망칠 기회가 주어졌다.');
-                                showMoveButton(req, $('#control'));
+                });
+
+                $('#battle_control').append(dom);
 
 
-                            }
-                            // 체력 20% 이하
-                            if (player.HP * 0.8 <= i * monster_attack) {
-                                $('#runaway_comment').text('체력이 20% 이하로 떨어져서 도망칠 기회가 주어졌다.');
-                                showMoveButton(req, $('#control'))
-
-
-                            }
-                        }
-
-                    });
-
-                    $('#battle_control').append(dom);
-
-
-                } else {
-                    $('#monster').text('');
-                    $('#battle_comment').text('');
-                    $('#battle_turn').text('');
-                    $('#my_battle').text('');
-                    $('#monster_battle').text('');
-                    $('#runaway_comment').text('');
-                    showMoveButton(req, $('#control'))
-
-
-                }
             } else {
-                $('#event_result').text("아무일도 일어나지 않았다.");
                 $('#monster').text('');
                 $('#battle_comment').text('');
                 $('#battle_turn').text('');
@@ -192,8 +197,8 @@
                 $('#runaway_comment').text('');
                 showMoveButton(req, $('#control'))
 
-
             }
+
         });
 
     }
@@ -202,7 +207,7 @@
         location.href = "/";
     }
 
-    localStorage.clear(); // 새로고침했을 때 초기화면으로 돌아오는 방법
+    // localStorage.clear(); // 새로고침했을 때 초기화면으로 돌아오는 방법
     sendAction("/action", {action: 'query'});
 
 
