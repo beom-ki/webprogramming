@@ -21,7 +21,7 @@ app.engine("html", require("ejs").renderFile);
 mongoose.connect(
     "mongodb+srv://final:final@final.d2h19.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true }
-); // port 바꿔줘야 돌아갔다. - 내 로컬 문제인가
+);
 
 const authentication = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -57,7 +57,8 @@ app.post("/signup", async (req, res) => {
     str: 10,
     def: 10,
     x: 0,
-    y: 0
+    y: 0,
+    randomStat: 5
   });
 
   const key = crypto.randomBytes(24).toString("hex");
@@ -118,8 +119,7 @@ app.post("/action", authentication, async (req, res) => {
     event = { description: "몸 속의 시작점이다." };
     return res.send({ player, field, event, actions, itemId_count });
   } else if (action === "move") {
-    // 사망 후 원점으로 돌아가는 것 추가됨
-    const origin = req.body.origin;
+    const origin = req.body.origin;   // 사망 후 원점
     let x = 0;
     let y = 0;
 
@@ -169,7 +169,7 @@ app.post("/action", authentication, async (req, res) => {
         type: "battle",
         monster: _monster
       }; // monster 능력치 보이게 해야한다.
-
+      // player.incrementHP(-1);
 
       if (player.HP <= 0) {
         player.x = 0;
@@ -213,6 +213,11 @@ app.post("/action", authentication, async (req, res) => {
         description: `랜덤 이벤트 : ${_random.type} 발생!`,
         type: "random"
       }; // TODO : 랜덤이벤트 능력치 구현
+    } else {
+      event = {
+        description: '아무일도 일어나지 않았다.',
+        type: "nothing"
+      };
     }
 
 
