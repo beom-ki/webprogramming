@@ -279,16 +279,15 @@ app.post("/action", authentication, async (req, res) => {
 
     return res.send({ player, field, event, actions, itemId_count });
   } else if (action === "battle") {
-    const damage = parseFloat(req.body.damage);
-    const dead = req.body.dead;
+    const {damage, dead, exp} = req.body;
 
-    if (dead === "false") {
-      player.incrementHP(-damage);
-    } else if (dead === "true") {
-      player.HP = player.maxHP;
-    } else if (dead === "monster"){
-      player.exp += Number(monsterExp)
-    }
+      if (dead === "false") {
+        player.incrementHP(-parseFloat(damage));
+      } else if (dead === "true") {
+        player.HP = player.maxHP;
+      } else if (dead === "monster") {
+        player.exp += parseFloat(exp);
+      }
 
     await player.save();
   }
