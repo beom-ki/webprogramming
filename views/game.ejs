@@ -144,7 +144,9 @@
                         $('#my_battle').text(`나는 ${event.monster.name}에게 ${my_attack}의 피해를 입혔다. 몬스터를 물리쳤다!`);
                         $('#monster_battle').text(`승리했다!`);
                         $('#runaway_comment').text('');
-                        showMoveButton(req, $('#control'))
+                        $('#EXP').text(`${player.exp + event.monster.exp}/100`);
+                        sendAction("/action", {damage: 0, dead: "monster", exp: event.monster.exp, action: "battle"});
+                        showMoveButton(req, $('#control'));
 
                     }
                     // 나 사망
@@ -176,7 +178,7 @@
 
                         }
                         // 체력 20% 이하
-                        if (player.HP * 0.8 <= i * monster_attack) {
+                        if (player.maxHP * 0.8 <= i * monster_attack) {
                             $('#runaway_comment').text('체력이 20% 이하로 떨어져서 도망칠 기회가 주어졌다.');
                             showMoveButton(req, $('#control'));
 
