@@ -99,7 +99,7 @@
             $('#HP').text(`${player.HP} / ${player.maxHP}`);
             $('#position').text(`(${field.x},${field.y})`);
             $('#LV').text(player.level);
-            $('#EXP').text(player.exp);
+            $('#EXP').text(`${player.exp}/100`);
             $('#STR').text(` str : ${player.str}`);
             $('#DEF').text(` def : ${player.def}`);
             $('#inventory').text(`[백신돌파 : ${itemId_count[0]}개, 백신부작용 : ${itemId_count[1]}개, 면역력 저하 : ${itemId_count[2]}개, 밀집시설 이용 : ${itemId_count[3]}개, 턱스크 : ${itemId_count[4]}개]`);
