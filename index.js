@@ -295,7 +295,7 @@ app.post("/action", authentication, async (req, res) => {
       } else if(lostItem[0].itemId === 5){
         player.maxHP -= items[4].maxHP;
       }
-      console.log(lostItem[0].itemId);
+      
     } else if (dead === "monster") {
       player.exp += parseFloat(exp);
     }
