@@ -238,7 +238,7 @@ app.post("/action", authentication, async (req, res) => {
       };
     }
 
-    if (player.exp > 100) {
+    if (player.exp >= 100) {
       player.exp -= 100;
       player.level += 1;
       player.str += 5;
