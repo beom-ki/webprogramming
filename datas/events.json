@@ -36,8 +36,9 @@
       "def": -1
     },
       {
-        "type": "strong",
-        "str": 1
+        "type": "shield",
+        "str": -1,
+        "def": 3
       },
       {
         "type": "teleport"
