@@ -5,8 +5,8 @@ const schema = new Schema({
   name: String,
   key: String,
 
-  level: Number,
-  exp: Number,
+  level: { type: Number, default: 1 },
+  exp: { type: Number, default: 0 },
 
   maxHP: { type: Number, default: 50 },
   HP: { type: Number, default: 50 },
