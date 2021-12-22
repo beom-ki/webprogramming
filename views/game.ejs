@@ -147,6 +147,7 @@
                         $('#EXP').text(`${player.exp + event.monster.exp}/100`);
                         sendAction("/action", {damage: 0, dead: "monster", exp: event.monster.exp, action: "battle"});
                         showMoveButton(req, $('#control'));
+                        $('#battle_control').html('');
 
                     }
                     // 나 사망
